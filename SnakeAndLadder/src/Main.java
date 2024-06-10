@@ -21,9 +21,12 @@ public class Main {
             String currentPLayerName = sc.nextLine();
             playersName[i-1] = currentPLayerName.isEmpty() ? "Player " + i : currentPLayerName;
         }
-        System.out.println("Do you want to see the logs ? (yes/no)");
+        System.out.println("Do you want to randomize the playing order ? (yes/no)");
         String line = sc.nextLine();
-        BoardGame game = new BoardGame(playerNumber, playersName, line.equals("yes"));
+        boolean random = line.equals("yes");
+        System.out.println("Do you want to see the logs ? (yes/no)");
+        line = sc.nextLine();
+        BoardGame game = new BoardGame(playerNumber, playersName, random ,line.equals("yes"));
         game.playGame();
     }
 }

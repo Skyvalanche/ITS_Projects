@@ -1,13 +1,34 @@
+import java.util.Random;
+
 public class BoardGame {
 
-    private static int playersNumber;
-    private static Player[] players;
+    private int playersNumber;
+    private Player[] players;
 
-    public BoardGame(int playerNb, String[] playersName, boolean log) {
+    public BoardGame(int playerNb, String[] playersName, boolean r, boolean log) {
         playersNumber = playerNb;
+
         players = new Player[playersNumber];
-        for (int i = 0; i < playersNumber; i++) {
-            players[i] = new Player(playersName[i], log);
+
+        if (r) {
+            int[] attributed = new int[playersNumber];
+            for (int i = 0; i < playersNumber; i++) {
+                attributed[i] = -1;
+            }
+            Random rdm = new Random();
+            for (int i = 0; i < playersNumber; i++) {
+                int nb = rdm.nextInt(playersNumber);
+                while(attributed[nb] != -1) {
+                    nb = rdm.nextInt(playersNumber);
+                }
+                attributed[nb] = i;
+                players[nb] = new Player(playersName[i], log);
+            }
+        }
+        else {
+            for (int i = 0; i < playersNumber; i++) {
+                players[i] = new Player(playersName[i], log);
+            }
         }
     }
 
