@@ -17,6 +17,6 @@ public class BoardGame {
         while(!players[i].Play()) {
             i = (i+1)%playersNumber;
         }
-        System.out.println(players[i] + " has Won the Game !!\nWell done \uD83D\uDC4D");
+        System.out.println(players[i] + " has Won the Game !!\nWell done 👍");
     }
 }

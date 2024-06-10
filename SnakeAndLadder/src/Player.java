@@ -14,31 +14,49 @@ public class Player {
     }
 
     private int isOnSnake() {
-        return switch (position) {
-            case 29 -> 9;
-            case 38 -> 15;
-            case 47 -> 5;
-            case 53 -> 33;
-            case 62 -> 37;
-            case 86 -> 54;
-            case 92 -> 70;
-            case 97 -> 25;
-            default -> -1;
-        };
+        switch (position) {
+            case 29:
+                return 9;
+            case 38:
+                return 15;
+            case 47:
+                return 5;
+            case 53:
+                return 33;
+            case 62:
+                return 37;
+            case 86:
+                return  54;
+            case 92:
+                return 70;
+            case 97:
+                return  25;
+            default:
+                return -1;
+        }
     }
 
     private int isOnLadder() {
-        return switch (position) {
-            case 2 -> 18;
-            case 8 -> 34;
-            case 20 -> 77;
-            case 32 -> 68;
-            case 41 -> 79;
-            case 74 -> 88;
-            case 82 -> 100;
-            case 85 -> 95;
-            default -> -1;
-        };
+        switch (position) {
+            case 2:
+                return 18;
+            case 8:
+                return 34;
+            case 20:
+                return 77;
+            case 32:
+                return 68;
+            case 41:
+                return 79;
+            case 74:
+                return 88;
+            case 82:
+                return 100;
+            case 85:
+                return 95;
+            default:
+                return -1;
+        }
     }
 
     private boolean hasWon() {
@@ -46,11 +64,11 @@ public class Player {
     }
 
     private int rollADice() {
-        return random.nextInt(1,7);
+        return random.nextInt(6) + 1;
     }
 
     private void walk (int foots) {
-        if (log) System.out.print(this + "(\uD83C\uDFB2 " + foots + ") ");
+        if (log) System.out.print(this + "(🎲 " + foots + ") ");
         if ((position + foots) > 100) {
             if (log)  System.out.print(position  + " -> ");
             position = 100 - (position + foots)%100;
@@ -72,12 +90,12 @@ public class Player {
         int snake;
         if ((ladder= isOnLadder()) != -1) {
             position = ladder;
-            if (log) System.out.print(" \uD83E\uDE9C -> " + position);
+            if (log) System.out.print(" 🪜 -> " + position);
         } else if ((snake = isOnSnake()) != -1) {
             position = snake;
-            if (log) System.out.print(" \uD83D\uDC0D -> " + position);
+            if (log) System.out.print(" 🐍 -> " + position);
         }
-        System.out.println();
+        if (log) System.out.println();
         return hasWon();
     }
 
