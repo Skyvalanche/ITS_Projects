@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Hey let's play Snake and Ladder game !!");
-        System.out.println("How many player are they ?");
+        System.out.print("How many player are they : ");
         Scanner sc = new Scanner(System.in);
         int playerNumber = sc.nextInt();
         sc.nextLine();

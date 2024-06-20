@@ -4,59 +4,20 @@ public class Player {
     private final String playerName;
     private int position;
     private static Random random;
+    private Ladders ladders;
+    private Snakes snakes;
+
+    private boolean heat;
     private static boolean log;
 
-    public Player(String name, boolean clog) {
+    public Player(String name, Ladders lddrs, Snakes snks, boolean clog) {
         playerName = name;
         random = new Random();
         position = 0;
+        ladders = lddrs;
+        snakes = snks;
+        heat = false;
         log = clog;
-    }
-
-    private int isOnSnake() {
-        switch (position) {
-            case 29:
-                return 9;
-            case 38:
-                return 15;
-            case 47:
-                return 5;
-            case 53:
-                return 33;
-            case 62:
-                return 37;
-            case 86:
-                return  54;
-            case 92:
-                return 70;
-            case 97:
-                return  25;
-            default:
-                return -1;
-        }
-    }
-
-    private int isOnLadder() {
-        switch (position) {
-            case 2:
-                return 18;
-            case 8:
-                return 34;
-            case 20:
-                return 77;
-            case 32:
-                return 68;
-            case 41:
-                return 79;
-            case 74:
-                return 88;
-            case 82:
-                return 100;
-            case 85:
-                return 95;
-            default:
-                return -1;
-        }
     }
 
     private boolean hasWon() {
@@ -64,7 +25,7 @@ public class Player {
     }
 
     private int rollADice() {
-        return random.nextInt(6) + 1;
+        return random.nextInt(heat?3:6) + 1;
     }
 
     private void walk (int foots) {
@@ -86,17 +47,29 @@ public class Player {
 
         walk(rollADice());
 
-        int ladder;
+        int ladder = ladders.isOnLadder(position);
         int snake;
-        if ((ladder= isOnLadder()) != -1) {
+        if (ladder != -1) {
             position = ladder;
             if (log) System.out.print(" 🪜 -> " + position);
-        } else if ((snake = isOnSnake()) != -1) {
+        } if ((snake = snakes.isOnSnake(position)) != -1) {
             position = snake;
             if (log) System.out.print(" 🐍 -> " + position);
         }
         if (log) System.out.println();
         return hasWon();
+    }
+
+    /*EVENTS*/
+
+    public void HeatWave(boolean b) {
+        heat = b;
+    }
+
+    public void Tsunami() {
+        if (position%5 != 0) {
+            position = position<15?0:position-15;
+        }
     }
 
     public String toString() {
