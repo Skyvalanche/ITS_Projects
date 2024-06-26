@@ -52,7 +52,7 @@ public class BoardGame {
     public void playGame() {
         int i = 0;
         String eventName = "None";
-        String[] eventList = {"Zany", "Night", "Rain", "Heat Wave", "Tsunami", "Earth Quake"};
+        String[] eventList = {"Zany", "Night", "Rain", "Heat Wave", "Tsunami", "Volcano"};
         int[] eventDurations = {6, 5, 4, 4, 1, 3};
         int playersLeft = playersNumber;
         int eventDuration = 0;
@@ -67,19 +67,23 @@ public class BoardGame {
                     //undo the event changes
                     switch (eventName) {
                         case "Zany":
-                            if (logs) System.out.println("Zany has ended");
+                            if (logs) System.out.println("🥳 Zany has ended 🥳\n" +
+                                    "Everything is becoming normal");
                             snakes.Revert(false);
                             ladders.Revert(false);
                         case "Night":
-                            if (logs) System.out.println("The Sun rise and the snake with them");
+                            if (logs) System.out.println("☀️☀️ The Sun Rise ☀️☀️\n" +
+                                    "And the snake with them");
                             snakes.SetActive(true);
                             break;
                         case "Rain":
-                            if (logs) System.out.println("Ladders are dry now you can use them");
+                            if (logs) System.out.println("🌤️☁️ The Rain Stopped 🌤️☁️\n" +
+                                    "️Ladders are dry now you can use them");
                             ladders.SetActive(true);
                             break;
                         case "Heat Wave":
-                            if (logs) System.out.println("The Heat went out, you can move faster");
+                            if (logs) System.out.println("❄️❄️ The Heat Went Out ❄️❄️\n" +
+                                    "You can move faster");
                             for (int k = 0; k < playersLeft; k++) {
                                 players[k].HeatWave(false);
                             }
@@ -87,8 +91,9 @@ public class BoardGame {
                         case "Tsunami":
                             //nothing happen
                             break;
-                        case "Earth Quake":
-                            if (logs) System.out.println("The Earth Stopped shaking");
+                        case "Volcano":
+                            if (logs) System.out.println("⛰️⛰️ The Volcano is calm now ⛰️⛰️\n" +
+                                    "Ladders and Snakes are back");
                             ladders.SetActive(true);
                             snakes.SetActive(true);
                             break;
@@ -106,32 +111,38 @@ public class BoardGame {
 
                     switch (eventName) {
                         case "Zany": //the snake make you go up and ladder go down
-                            if (logs) System.out.println("The Zany has begun !!");
+                            if (logs) System.out.println("🤪🤪 The Zany Begun 🤪🤪\n" +
+                                    "Ladders Are Malus and Snakes Bonus");
                             snakes.Revert(true);
                             ladders.Revert(true);
                             break;
                         case "Night": //no snakes
-                            if (logs) System.out.println("The night is up, Snakes sleeping for 5 rounds");
+                            if (logs) System.out.println("🌌🌌 The Night is Up 🌌🌌\n" +
+                                    "Snakes are sleeping");
                             snakes.SetActive(false);
                             break;
                         case "Rain": //no ladders
-                            if (logs) System.out.println("It's Rainy, Ladders now slip and can't be used");
+                            if (logs) System.out.println("🌧️🌧️ It's Rainy 🌧️🌧️\n" +
+                                    "Ladders now slip and can't be used");
                             ladders.SetActive(false);
                             break;
                         case "Heat Wave": //you move slowly (dice between 1 and 3)
-                            if (logs) System.out.println("It's Hot, You now move slower because of the high temperature");
+                            if (logs) System.out.println("🔥🔥 The Weather is Extremely Hot 🔥🔥\n" +
+                                    "You now move slower because of the high temperature");
                             for (int k = 0; k < playersLeft; k++) {
                                 players[k].HeatWave(true);
                             }
                             break;
                         case "Tsunami": //if you're not in a shelter (%5 tiles), you're being pushed back from 15 tiles
-                            if (logs) System.out.println("There a Tsunami, Whoever is not protected (on %5 tile) is taken back");
+                            if (logs) System.out.println("🌊🌊 There a Tsunami 🌊🌊\n" +
+                                    "Whoever is not protected (on a _5 tile) is taken back");
                             for (int k = 0; k < playersLeft; k++) {
                                 players[k].Tsunami();
                             }
                             break;
-                        case "Earth Quake": //no ladder nor snakes during this event
-                            if (logs) System.out.println("There was an Earth Quake, Ladders are now broken and snakes went hiding");
+                        case "Volcano": //no ladder nor snakes during this event
+                            if (logs) System.out.println("🌋🌋 A Volcano is Erupting 🌋🌋\n" +
+                                    "Ladders are no usable and snakes went hiding");
                             ladders.SetActive(false);
                             snakes.SetActive(false);
                             break;
