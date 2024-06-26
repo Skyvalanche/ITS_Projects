@@ -68,8 +68,11 @@ public class Player {
 
     public void Tsunami() {
         if (position%5 != 0) {
+            if (log) System.out.print(this + " " + position + " 🌊 -> ");
             position = position<15?0:position-15;
+            if (log) System.out.println(position);
         }
+        else if (log) System.out.println(this + " Is Safe !");
     }
 
     public String toString() {
