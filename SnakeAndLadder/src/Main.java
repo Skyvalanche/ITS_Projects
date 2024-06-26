@@ -5,9 +5,13 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+        //Intro
         System.out.println("Hey let's play Snake and Ladder game !!");
         System.out.print("How many player are they : ");
         Scanner sc = new Scanner(System.in);
+
+        //Player Number
         int playerNumber = sc.nextInt();
         sc.nextLine();
         while (playerNumber <= 0) {
@@ -15,18 +19,28 @@ public class Main {
             playerNumber = sc.nextInt();
             sc.nextLine();
         }
+
+        //Player Names
         String[] playersName = new String[playerNumber];
+        System.out.println("Enter Players Name (if nothing it will just be the number of player)");
         for (int i = 1; i <= playerNumber; i++) {
-            System.out.print("Player " + i + " name : ");
+            System.out.print("Player " + i + " : ");
             String currentPLayerName = sc.nextLine();
             playersName[i-1] = currentPLayerName.isEmpty() ? "Player " + i : currentPLayerName;
         }
-        System.out.println("Do you want to randomize the playing order ? (yes/no)");
-        String line = sc.nextLine();
-        boolean random = line.equals("yes");
-        System.out.println("Do you want to see the logs ? (yes/no)");
+
+        String line;
+
+        //Questions
+        System.out.println("Do you want to randomize the playing order ? (y/n)");
         line = sc.nextLine();
-        BoardGame game = new BoardGame(playerNumber, playersName, random ,line.equals("yes"));
+        boolean random = line.equals("y");
+        System.out.println("Do you want to see the logs ? (y/n)");
+        line = sc.nextLine();
+        boolean logs = !line.equals("n");
+
+        //Start Game
+        BoardGame game = new BoardGame(playerNumber, playersName, random, logs);
         game.playGame();
     }
 }
