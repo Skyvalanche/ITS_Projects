@@ -8,8 +8,9 @@ public class BoardGame {
     private Random random;
     private Player[] players;
     private boolean logs;
+    private int[] penaltyTiles = {5, 15, 25, 35, 45}; // Example penalty tiles
 
-    //Constructor
+    // Constructor
     public BoardGame(int playerNb, String[] playersName, boolean r, boolean log) {
         playersNumber = playerNb;
         random = new Random();
@@ -18,7 +19,7 @@ public class BoardGame {
         ladders = new Ladders();
         logs = log;
 
-        //if we randomize
+        // if we randomize
         if (r) {
             int[] attributed = new int[playersNumber];
             for (int i = 0; i < playersNumber; i++) {
@@ -26,24 +27,24 @@ public class BoardGame {
             }
             for (int i = 0; i < playersNumber; i++) {
                 int nb = random.nextInt(playersNumber);
-                while(attributed[nb] != -1) {
+                while (attributed[nb] != -1) {
                     nb = random.nextInt(playersNumber);
                 }
                 attributed[nb] = i;
-                players[nb] = new Player(playersName[i], ladders, snakes, log);
+                players[nb] = new Player(playersName[i], ladders, snakes, log, penaltyTiles);
             }
-        } else { //otherwise we just insert players in the given name order
+        } else { // otherwise we just insert players in the given name order
             for (int i = 0; i < playersNumber; i++) {
-                players[i] = new Player(playersName[i], ladders, snakes, log);
+                players[i] = new Player(playersName[i], ladders, snakes, log, penaltyTiles);
             }
         }
     }
 
     public void swap(int position, int playersLeft) {
-        //move the wining player behind the players still in the game
+        // move the winning player behind the players still in the game
         Player p = players[position];
         while (position < playersLeft) {
-            players[position] = players[position+1];
+            players[position] = players[position + 1];
             position++;
         }
         players[position] = p;
@@ -57,106 +58,95 @@ public class BoardGame {
         int playersLeft = playersNumber;
         int eventDuration = 0;
 
-        //Loop till they are no player left
+        // Loop till there are no players left
         while (playersLeft != 0) {
-            //Same loop, used twice to permit everyone to finish the game
+            // Same loop, used twice to permit everyone to finish the game
             while (!players[i].Play()) {
 
-                //Manage Events
-                if (eventDuration == 0) { //if the event just ended
-                    //undo the event changes
+                // Manage Events
+                if (eventDuration == 0) { // if the event just ended
+                    // undo the event changes
                     switch (eventName) {
                         case "Zany":
-                            if (logs) System.out.println("🥳 Zany has ended 🥳\n" +
-                                    "Everything is becoming normal");
+                            if (logs) System.out.println("🥳 Zany has ended 🥳\nEverything is becoming normal");
                             snakes.Revert(false);
                             ladders.Revert(false);
                         case "Night":
-                            if (logs) System.out.println("☀️☀️ The Sun Rise ☀️☀️\n" +
-                                    "And the snake with them");
+                            if (logs) System.out.println("☀️☀️ The Sun Rise ☀️☀️\nAnd the snake with them");
                             snakes.SetActive(true);
                             break;
                         case "Rain":
-                            if (logs) System.out.println("🌤️☁️ The Rain Stopped 🌤️☁️\n" +
-                                    "️Ladders are dry now you can use them");
+                            if (logs) System.out.println("🌤️☁️ The Rain Stopped 🌤️☁️\nLadders are dry now you can use them");
                             ladders.SetActive(true);
                             break;
                         case "Heat Wave":
-                            if (logs) System.out.println("❄️❄️ The Heat Went Out ❄️❄️\n" +
-                                    "You can move faster");
+                            if (logs) System.out.println("❄️❄️ The Heat Went Out ❄️❄️\nYou can move faster");
                             for (int k = 0; k < playersLeft; k++) {
                                 players[k].HeatWave(false);
                             }
                             break;
                         case "Tsunami":
-                            //nothing happen
+                            // nothing happens
                             break;
                         case "Volcano":
-                            if (logs) System.out.println("⛰️⛰️ The Volcano is calm now ⛰️⛰️\n" +
-                                    "Ladders and Snakes are back");
+                            if (logs) System.out.println("⛰️⛰️ The Volcano is calm now ⛰️⛰️\nLadders and Snakes are back");
                             ladders.SetActive(true);
                             snakes.SetActive(true);
                             break;
                     }
-                    //reset event
+                    // reset event
                     eventName = "";
                     eventDuration--;
                 } else if (eventDuration > 0) {
                     eventDuration--;
-                } else if (random.nextInt(10) == 0) { //if there is no event and with 10% chance
-                    //We pick a new event randomly
+                } else if (random.nextInt(10) == 0) { // if there is no event and with 10% chance
+                    // We pick a new event randomly
                     int eventID = random.nextInt(6);
                     eventName = eventList[eventID];
                     eventDuration = playersLeft * eventDurations[eventID];
 
                     switch (eventName) {
-                        case "Zany": //the snake make you go up and ladder go down
-                            if (logs) System.out.println("🤪🤪 The Zany Begun 🤪🤪\n" +
-                                    "Ladders Are Malus and Snakes Bonus");
+                        case "Zany": // the snake make you go up and ladder go down
+                            if (logs) System.out.println("🤪🤪 The Zany Begun 🤪🤪\nLadders Are Malus and Snakes Bonus");
                             snakes.Revert(true);
                             ladders.Revert(true);
                             break;
-                        case "Night": //no snakes
-                            if (logs) System.out.println("🌌🌌 The Night is Up 🌌🌌\n" +
-                                    "Snakes are sleeping");
+                        case "Night": // no snakes
+                            if (logs) System.out.println("🌌🌌 The Night is Up 🌌🌌\nSnakes are sleeping");
                             snakes.SetActive(false);
                             break;
-                        case "Rain": //no ladders
-                            if (logs) System.out.println("🌧️🌧️ It's Rainy 🌧️🌧️\n" +
-                                    "Ladders now slip and can't be used");
+                        case "Rain": // no ladders
+                            if (logs) System.out.println("🌧️🌧️ It's Rainy 🌧️🌧️\nLadders now slip and can't be used");
                             ladders.SetActive(false);
                             break;
-                        case "Heat Wave": //you move slowly (dice between 1 and 3)
-                            if (logs) System.out.println("🔥🔥 The Weather is Extremely Hot 🔥🔥\n" +
-                                    "You now move slower because of the high temperature");
+                        case "Heat Wave": // you move slowly (dice between 1 and 3)
+                            if (logs) System.out.println("🔥🔥 The Weather is Extremely Hot 🔥🔥\nYou now move slower because of the high temperature");
                             for (int k = 0; k < playersLeft; k++) {
                                 players[k].HeatWave(true);
                             }
                             break;
-                        case "Tsunami": //if you're not in a shelter (%5 tiles), you're being pushed back from 15 tiles
-                            if (logs) System.out.println("🌊🌊 There a Tsunami 🌊🌊\n" +
-                                    "Whoever is not protected (on a _5 tile) is taken back");
+                        case "Tsunami": // if you're not in a shelter (%5 tiles), you're being pushed back from 15 tiles
+                            if (logs) System.out.println("🌊🌊 There's a Tsunami 🌊🌊\nWhoever is not protected (on a _5 tile) is taken back");
                             for (int k = 0; k < playersLeft; k++) {
                                 players[k].Tsunami();
                             }
                             break;
-                        case "Volcano": //no ladder nor snakes during this event
-                            if (logs) System.out.println("🌋🌋 A Volcano is Erupting 🌋🌋\n" +
-                                    "Ladders are no usable and snakes went hiding");
+                        case "Volcano": // no ladder nor snakes during this event
+                            if (logs) System.out.println("🌋🌋 A Volcano is Erupting 🌋🌋\nLadders are no usable and snakes went hiding");
                             ladders.SetActive(false);
                             snakes.SetActive(false);
                             break;
                     }
                 }
 
-                //next turn
+                // next turn
                 i = (i + 1) % playersLeft;
             }
             if (playersNumber == playersLeft) System.out.println(players[i] + " has Won the Game !!\nWell done 👍");
-            else System.out.println(players[i] + " has scored in "+(playersNumber-playersLeft+1)+ " position\nGood Job 👍");
+            else System.out.println(players[i] + " has scored in " + (playersNumber - playersLeft + 1) + " position\nGood Job 👍");
             playersLeft--;
-            swap(i,playersLeft);
-            if (playersLeft!=0) i = (i + 1) % playersLeft;
+            swap(i, playersLeft);
+            if (playersLeft != 0) i = (i + 1) % playersLeft;
         }
         System.out.println("Everyone Ended The Game 👍");
     }
